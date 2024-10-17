@@ -6,8 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        TZ: "UTC" #TZ sets timezone for ubuntu setup
-        WIN_BUILD: "true" #WIN_BUILD is used to enable windows build in sandcat plugin
+        TZ: "UTC"
+        WIN_BUILD: "true"
     image: caldera:latest
     ports:
       - "8888:8888"
@@ -21,3 +21,28 @@ services:
     volumes:
       - ./:/usr/src/app
     command: --log DEBUG
+    networks:
+      - caldera-network
+    container_name: caldera
+
+  agent-1:
+    build:
+      context: ./ubuntu-agent
+      dockerfile: Dockerfile
+    container_name: agent-1
+    command: tail -f /dev/null  # Keeps the container running
+    networks:
+      - caldera-network
+
+  agent-2:
+    build:
+      context: ./ubuntu-agent
+      dockerfile: Dockerfile
+    container_name: agent-2
+    command: tail -f /dev/null  # Keeps the container running
+    networks:
+      - caldera-network
+
+networks:
+  caldera-network:
+    driver: bridge
