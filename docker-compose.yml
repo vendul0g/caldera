@@ -43,6 +43,15 @@ services:
     networks:
       - caldera-network
 
+  discover-1:
+    build:
+      context: ./ubuntu-agent
+      dockerfile: Dockerfile
+    container_name: discover-1
+    command: tail -f /dev/null  # Keeps the container running
+    networks:
+      - caldera-network
+
 networks:
   caldera-network:
     driver: bridge
