@@ -90,4 +90,4 @@ STOPSIGNAL SIGINT
 # Expose necessary ports
 EXPOSE 8888 8443 7010 7011/udp 7012 8853 8022 2222
 
-ENTRYPOINT ["python3", "server.py", "--build"]
+ENTRYPOINT ["python3", "server.py"]
