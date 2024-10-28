@@ -1,0 +1,18 @@
+- requirements: []
+  name: Nmap Port Scan
+  description: Nmap port scanning of found hosts
+  tactic: technical-information-gathering
+  technique_id: t8002
+  technique_name: Port Scanning
+  delete_payload: true
+  executors:
+  - cleanup:
+    - apt remove --purge nmap
+    timeout: 60
+    platform: linux
+    name: sh
+    payloads: []
+    parsers: []
+    command: ip=#{remote.host.ip} && (command -v nmap >/dev/null 2>&1 || (apt update
+      && apt install -y nmap)) && nmap -sS -p- --min-rate 5000 $ip
+  id: 0c381e8f-d959-44eb-a59f-81678df116c3
