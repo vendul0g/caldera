@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login</title>
+    <script>
+        function login() {
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            if (username === 'admin' && password === 'admin') {
+                document.getElementById('message').innerHTML = 'Welcome, admin!<br>Flag: <code>flag{inf0rmati0n_d1scl0sur3}</code>';
+                document.getElementById('loginForm').style.display = 'none';
+            } else {
+                document.getElementById('message').innerHTML = 'Incorrect credentials.';
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Admin Login</h1>
+    <form id="loginForm" onsubmit="login(); return false;">
+        Username: <input type="text" id="username"><br>
+        Password: <input type="password" id="password"><br>
+        <input type="submit" value="Login">
+    </form>
+    <p id="message"></p>
+    <p><a href="../index.html">Back to Home</a></p>
+</body>
+</html>
