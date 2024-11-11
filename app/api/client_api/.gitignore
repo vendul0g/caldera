@@ -1,0 +1,4 @@
+# Gitignore
+
+## Ignore Environment files
+.env
