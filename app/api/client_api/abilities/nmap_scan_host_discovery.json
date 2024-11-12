@@ -1,0 +1,26 @@
+{
+    "ability_id": "152679384-0000-0002",
+    "tactic": "discovery",
+    "technique_name": "Subnet Nmap Scan Host Discovery",
+    "technique_id": "T1254",
+    "name": "Subnet Nmap Scan Host Discovery",
+    "description": "This ability will perform a subnet Nmap scan to discover hosts on the network.",
+    "executors": [
+      {
+        "name": "sh",
+        "platform": "linux",
+        "command": "ip=#{host.ip.address} && sub=$(echo \"$ip\" | awk -F. '{print $1\".\"$2\".\"$3\".0/24\"}') && (command -v nmap >/dev/null 2>&1 || (apt update && apt install -y nmap)) && nmap -sn --min-rate 5000 $sub",
+        "timeout": 60,
+        "parsers": [
+          {
+            "module": "plugins.stockpile.app.parsers.ipaddr",
+            "parserconfigs": [
+              {
+                "source": "host.ip.address"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }

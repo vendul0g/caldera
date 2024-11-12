@@ -1,0 +1,26 @@
+{
+    "ability_id": "152679384-0000-0003",
+    "tactic": "technical-information-gathering",
+    "technique_name": "Subnet Nmap Scan Host Discovery",
+    "technique_id": "T1254",
+    "name": "Nmap Port Scan",
+    "description": "This ability will perform a port scan on the target host given by the previous ability.",
+    "executors": [
+      {
+        "name": "sh",
+        "platform": "linux",
+        "command": "ip=#{remote.host.ip} && (command -v nmap >/dev/null 2>&1 || (apt update && apt install -y nmap)) && nmap -sS -p- --min-rate 5000 $ip",
+        "timeout": 60,
+        "parsers": [
+          {
+            "module": "plugins.stockpile.app.parsers.nmap",
+            "parserconfigs": [
+              {
+                "source": "nmap.port"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
