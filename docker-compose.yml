@@ -30,27 +30,32 @@ services:
       context: ./ubuntu-agent
       dockerfile: Dockerfile
     container_name: agent-1
-    command: tail -f /dev/null  # Keeps the container running
     networks:
       - caldera-network
+    depends_on:
+      - caldera
 
   agent-2:
     build:
       context: ./ubuntu-agent
       dockerfile: Dockerfile
     container_name: agent-2
-    command: tail -f /dev/null  # Keeps the container running
     networks:
       - caldera-network
+    depends_on:
+      - caldera
+
 
   discover-1:
     build:
       context: ./ubuntu-agent
       dockerfile: Dockerfile
     container_name: discover-1
-    command: tail -f /dev/null  # Keeps the container running
     networks:
       - caldera-network
+    depends_on:
+      - caldera
+
 
 networks:
   caldera-network:
