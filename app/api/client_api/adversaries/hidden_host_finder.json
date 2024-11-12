@@ -1,0 +1,10 @@
+{
+    "adversary_id   ": "152679384-0001-0001",
+    "name": "Hidden Host Finder",
+    "description": "This adversary will attempt to find hidden hosts on the network of the agent.",
+    "atomic_ordering": [
+        "152679384-0000-0001",
+        "152679384-0000-0002",
+        "152679384-0000-0003"
+    ]
+}
