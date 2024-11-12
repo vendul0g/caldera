@@ -82,6 +82,7 @@ class Adversary(FirstClassObjectInterface, BaseObject):
         existing.update('tags', self.tags)
         existing.update('has_repeatable_abilities', self.check_repeatable_abilities(ram['abilities']))
         existing.update('plugin', self.plugin)
+        print(f"Storing adversary: {self.adversary_id}")
         return existing
 
     def verify(self, log, abilities, objectives):

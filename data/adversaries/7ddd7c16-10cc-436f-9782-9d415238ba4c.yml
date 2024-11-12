@@ -1,8 +1,0 @@
-name: Hidden Host Finder
-description: Find hosts in the network of the agents owned using nmap
-atomic_ordering:
-- 48778f26-80db-4135-9771-5ef38e7dc938
-- 9f4e7129-5ab1-4b04-85ce-3e0fa16112ed
-- 0c381e8f-d959-44eb-a59f-81678df116c3
-adversary_id: 7ddd7c16-10cc-436f-9782-9d415238ba4c
-objective: 495a9828-cab1-44dd-a0ca-66e58177d8cc

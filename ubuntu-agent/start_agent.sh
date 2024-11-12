@@ -36,7 +36,5 @@ echo "Agent started"
 # Remove the default nginx configuration
 rm /etc/nginx/sites-enabled/default
 
-nginx -s reload
-
-# Start the web server
+# # Start the web server
 nginx -g 'daemon off;'
