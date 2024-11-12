@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     vim \
     nginx \
+    sudo \
     && apt-get clean
 
 # Create a new user 'user' and set up their environment
@@ -32,5 +33,10 @@ COPY blog_site/ /var/www/blog_site/
 EXPOSE 80
 EXPOSE 8080
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Add the agent start script
+COPY start_agent.sh /usr/local/bin/start_agent.sh
+RUN chmod +x /usr/local/bin/start_agent.sh
+
+
+# Start agent and nginx
+CMD ["/bin/bash", "-c", "/usr/local/bin/start_agent.sh"]
