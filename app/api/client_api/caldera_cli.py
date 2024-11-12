@@ -217,6 +217,124 @@ def get_ability(args):
         print(json.dumps(ability, indent=2))
     except requests.exceptions.RequestException as e:
         print(f"Error: {e}")
+        
+def get_adversaries(args):
+    """
+    Fetches adversaries from the specified API URL and prints them in a formatted JSON structure.
+    Args:
+        args: An object containing the following attributes:
+            - api_url (str): The base URL of the API.
+            - api_key (str): The API key for authentication.
+    Raises:
+        requests.exceptions.RequestException: If there is an issue with the HTTP request.
+    Prints:
+        A formatted JSON string of the adversaries retrieved from the API.
+    """
+    
+    url = f"{args.api_url}/adversaries"
+    headers = get_headers(args.api_key)
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        adversaries = response.json()
+        print(json.dumps(adversaries, indent=2))
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+        
+def get_adversary(args):
+    """
+    Fetches and prints the details of a specific adversary from the API.
+    Args:
+        args: An object containing the following attributes:
+            - adversary_id (str): The ID of the adversary to fetch.
+            - api_url (str): The base URL of the API.
+            - api_key (str): The API key for authentication.
+    Raises:
+        requests.exceptions.RequestException: If there is an error while making the request.
+    Prints:
+        The details of the adversary in JSON format, indented for readability.
+    """
+    
+    adversary_id = args.adversary_id
+    url = f"{args.api_url}/adversaries/{adversary_id}"
+    headers = get_headers(args.api_key)
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        adversary = response.json()
+        print(json.dumps(adversary, indent=2))
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+        
+def create_adversary(args):
+    """
+    Create a new adversary by sending a POST request to the specified API endpoint.
+    Args:
+        args: An object containing the following attributes:
+            - api_url (str): The base URL of the API.
+            - api_key (str): The API key for authentication.
+            - json_file (str): The path to the JSON file containing the adversary data.
+    Raises:
+        SystemExit: If there is an error reading the JSON file.
+        requests.exceptions.RequestException: If there is an error with the HTTP request.
+    The function performs the following steps:
+        1. Constructs the URL for the adversaries endpoint.
+        2. Loads the JSON data from the specified file.
+        3. Sends a POST request to the API with the JSON data and headers.
+        4. Prints the created adversary in a formatted JSON structure if successful.
+        5. Prints an error message and the response text if the request fails.
+    """
+
+    url = f"{args.api_url}/adversaries"
+    headers = get_headers(args.api_key, content_type="application/json")
+    
+    # Load JSON data from file
+    try:
+        with open(args.json_file, 'r') as f:
+            data = json.load(f)
+    except Exception as e:
+        print(f"Error reading JSON file: {e}")
+        sys.exit(1)
+    
+    try:
+        response = requests.post(url, headers=headers, json=data)
+        response.raise_for_status()
+        adversary = response.json()
+        print("Adversary created successfully:")
+        print(json.dumps(adversary, indent=2))
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+        if response is not None:
+            print("Response:", response.text)
+            
+def delete_adversary(args):
+    """
+    Deletes an adversary from the server using the provided arguments.
+    Args:
+        args: An object containing the following attributes:
+            - adversary_id (str): The ID of the adversary to be deleted.
+            - api_url (str): The base URL of the API.
+            - api_key (str): The API key for authentication.
+    Returns:
+        None
+    Prints:
+        A success message if the adversary is deleted successfully.
+        An error message if the deletion fails, including the status code and response text.
+        An exception message if a request exception occurs.
+    """
+    
+    adversary_id = args.adversary_id
+    url = f"{args.api_url}/adversaries/{adversary_id}"
+    headers = get_headers(args.api_key)
+    try:
+        response = requests.delete(url, headers=headers, verify=False)
+        if response.status_code == 204:
+            print(f"Adversary '{adversary_id}' deleted successfully.")
+        else:
+            print(f"Failed to delete adversary. Status Code: {response.status_code}")
+            print("Response:", response.text)
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")     
 
 def main():
     parser = argparse.ArgumentParser(
