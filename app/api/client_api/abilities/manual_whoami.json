@@ -1,0 +1,8 @@
+{
+    "executor": {
+        "name": "proc",
+        "command": "whoami",
+        "platform": "linux"
+    },
+    "paw": "nzhdbi"
+}

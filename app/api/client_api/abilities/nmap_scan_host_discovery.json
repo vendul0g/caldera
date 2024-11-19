@@ -16,7 +16,7 @@
             "module": "plugins.stockpile.app.parsers.ipaddr",
             "parserconfigs": [
               {
-                "source": "host.ip.address"
+                "source": "remote.host.ip"
               }
             ]
           }
