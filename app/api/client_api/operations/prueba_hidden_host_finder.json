@@ -1,0 +1,20 @@
+{
+    "name": "prueba_hidden_host_finder",
+    "autonomous": 1,
+    "use_learning_parsers": true,
+    "auto_close": false,
+    "jitter": "2/8",
+    "state": "running",
+    "visibility": 51,
+    "obfuscator": "plain-text",
+    "source": {
+        "id": "ed32b9c3-9593-4c33-b0db-e2007315096b"
+    },
+    "planner": {
+        "id": "aaa7c857-37a0-4c4a-85f7-4e9f7f30e31a"
+    },
+    "adversary": {
+        "adversary_id": "cb695913-1140-4c5b-8ff8-c5b5eddd380a"
+    },
+    "group": "red"
+}
