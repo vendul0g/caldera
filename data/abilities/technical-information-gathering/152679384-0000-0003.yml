@@ -1,5 +1,5 @@
 - tactic: technical-information-gathering
-  technique_name: Subnet Nmap Scan Host Discovery
+  technique_name: Nmap port scanning
   technique_id: T1254
   name: Nmap Port Scan
   description: This ability will perform a port scan on the target host given by the
@@ -14,4 +14,14 @@
     - module: plugins.stockpile.app.parsers.nmap
       parserconfigs:
       - source: nmap.port
+  requirements: []
+  privilege: ''
+  repeatable: false
+  buckets:
+  - technical-information-gathering
+  additional_info: {}
+  access: {}
+  singleton: false
+  plugin: ''
+  delete_payload: true
   id: 152679384-0000-0003
