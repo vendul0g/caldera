@@ -293,8 +293,8 @@ def create_manual_command(client: Any, args: Any) -> None:
         client (APIClient): The API client instance.
         args (argparse.Namespace): The parsed command-line arguments containing:
             - operation_id (str): ID of the operation to target.
-            - command (str): Command to execute on the agent.
             - agent_paw (str): Paw of the target agent.
+            - command (str): Command to execute on the agent.
     """
     try:
         # Construct the payload for the manual command
@@ -317,6 +317,32 @@ def create_manual_command(client: Any, args: Any) -> None:
         print(json.dumps(manual_command, indent=2))
     except Exception as e:
         logger.error(f"Failed to create manual command: {e}")
+
+
+def create_manual_ability(client: Any, args: Any) -> None:
+    """
+    Execute a manual ability on an agent in an existing operation.
+
+    Args:
+        client (APIClient): The API client instance.
+        args (argparse.Namespace): The parsed command-line arguments containing:
+            - operation_id (str): ID of the operation to target.
+            - agent_paw (str): Paw of the target agent.
+            - ability_id (str): ID of the ability to execute
+    """
+    try:
+        # Read the JSON file
+        with open(args.json_file, "r") as f:
+            data = json.load(f)
+        # Send the POST request to the API client
+        manual_command = client.post(
+            f"operations/{args.operation_id}/potential-links", data
+        )
+        # Log success and output the response
+        logger.info(f"Ability successfully sent to agent '{args.agent_paw}'.")
+        print(json.dumps(manual_command, indent=2))
+    except Exception as e:
+        logger.error(f"Failed to create manual ability: {e}")
 
 
 """================================================================="""
@@ -408,6 +434,24 @@ def delete_adversary(client: APIClient, args: argparse.Namespace) -> None:
         logger.info(f"Adversary '{args.adversary_id}' deleted successfully.")
     except Exception as e:
         logger.error(f"Failed to delete adversary: {e}")
+
+
+def update_adversary(client: APIClient, args: argparse.Namespace) -> None:
+    """
+    Update and adversary by its ID.
+
+    Args:
+        client (APIClient): The API client instance.
+        args (argparse.Namespace): The parsed command-line arguments.
+    """
+    try:
+        with open(args.json_file, "r") as f:
+            data = json.load(f)
+        adversary = client.patch(f"adversaries/{args.adversary_id}", data)
+        logger.info("Adversary updated successfully")
+        print(json.dumps(adversary, indent=2))
+    except Exception as e:
+        logger.error(f"Failed to create adversary: {e}")
 
 
 """================================================================="""
@@ -621,6 +665,27 @@ def delete_schedule(client: APIClient, args: argparse.Namespace) -> None:
 
 
 """================================================================="""
+"""                           Planners                              """
+"""================================================================="""
+
+
+def get_planners(client: APIClient, args: argparse.Namespace) -> None:
+    """
+    Retrieve planners.
+
+    Args:
+        client (APIClient): The API client instance.
+        args (argparse.Namespace): The parsed command-line arguments.
+    """
+    try:
+        planners = client.get("planners")
+        logger.info("Planners:")
+        print(json.dumps(planners, indent=2))
+    except Exception as e:
+        logger.error(f"Failed to get planners: {e}")
+
+
+"""================================================================="""
 """============                 Main                 ==============="""
 """================================================================="""
 
@@ -717,8 +782,20 @@ def main():
         "command", help="The command to be executed on the agent"
     )
     parser_manual_command.set_defaults(func=create_manual_command)
-    
-    
+
+    # Create manual Ability into an Operation
+    parser_manual_ability = subparsers.add_parser(
+        "create_manual_ability",
+        help="Create a Manual Ability into an Agent inside an Operation",
+    )
+    parser_manual_ability.add_argument("operation_id", help="ID of the operation")
+    parser_manual_ability.add_argument(
+        "agent_paw", help="Paw of the agent where the ability would be executed"
+    )
+    parser_manual_ability.add_argument(
+        "json_file", help="Path to the JSON file where ability is described"
+    )
+    parser_manual_ability.set_defaults(func=create_manual_ability)
 
     ####################################################################
     ###                          PARSERS                             ###
@@ -764,6 +841,18 @@ def main():
         "adversary_id", help="ID of the adversary to delete"
     )
     parser_delete_adversary.set_defaults(func=delete_adversary)
+
+    # Update Adversary
+    parser_update_adversary = subparsers.add_parser(
+        "update_adversary", help="Update an adversary by its ID"
+    )
+    parser_update_adversary.add_argument(
+        "adversary_id", help="ID of the adversary to delete"
+    )
+    parser_update_adversary.add_argument(
+        "json_file", help="Path to the JSON file containing the adversary definition"
+    )
+    parser_update_adversary.set_defaults(func=update_adversary)
 
     ####################################################################
     ###                          OPERATIONS                          ###
@@ -863,6 +952,15 @@ def main():
         "schedule_id", help="ID of the Schedule to delete"
     )
     parser_delete_schedule.set_defaults(func=delete_schedule)
+
+    ####################################################################
+    ###                           PLANNERS                           ###
+    ####################################################################
+    # Get Planners
+    parser_get_planners = subparsers.add_parser(
+        "get_planners", help="Get the planners of Caldera"
+    )
+    parser_get_planners.set_defaults(func=get_planners)
 
     ########################### END OF ARGS ###########################
     args = parser.parse_args()
