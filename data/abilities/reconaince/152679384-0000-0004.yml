@@ -1,0 +1,12 @@
+- tactic: reconaince
+  technique_name: Information Gathering
+  technique_id: T8005
+  name: Whoami?
+  description: To discover whoami
+  executors:
+  - name: sh
+    platform: linux
+    command: whoami
+    timeout: 60
+    parsers: []
+  id: 152679384-0000-0004
