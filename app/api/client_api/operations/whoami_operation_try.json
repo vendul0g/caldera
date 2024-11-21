@@ -1,6 +1,6 @@
 {
     "id": "152679384-0003-0000",
-    "name": "prueba_sleeper_whoami",
+    "name": "sleeper_whoami",
     "autonomous": 1,
     "use_learning_parsers": true,
     "auto_close": false,
@@ -17,6 +17,5 @@
     "adversary": {
         "adversary_id": "62dd583a-d06c-488d-bbda-68be867ce88c"
     },
-    "group": "red",
-    "allow_repeatable_abilities": true
+    "group": "red"
 }

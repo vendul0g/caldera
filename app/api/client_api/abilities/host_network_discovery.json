@@ -1,7 +1,7 @@
 {
     "ability_id": "152679384-0000-0001",
     "tactic": "discovery",
-    "technique_name": "System Network Configuration Discovery",
+    "technique_name": "System Network Configuration Discovery in Linux (ifconfig)",
     "technique_id": "T1016",
     "name": "Discover network interface",
     "description": "Discover the network interface and IPv4 address of the agent",

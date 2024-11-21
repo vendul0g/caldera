@@ -1,0 +1,24 @@
+{
+    "id": "152679384-0002-0001",
+    "schedule": "03 11 * * *",
+    "task": {
+        "id": "152679384-0004-0000",
+        "name": "1 - Prueba de lanzamiento de abilities con schedule",
+        "adversary": {
+            "adversary_id": "ad-hoc",
+            "atomic_ordering": [
+                "152679384-0000-0004",
+                "152679384-0000-0000",
+                "152679384-0000-0001",
+                "152679384-0000-0000",
+                "152679384-0000-0002"
+            ]
+        },
+        "objective": "495a9828-cab1-44dd-a0ca-66e58177d8cc",
+        "tags": [],
+        "plugin": "",
+        "planner": {
+            "id": "aaa7c857-37a0-4c4a-85f7-4e9f7f30e31a"
+        }
+    }
+}
