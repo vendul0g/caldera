@@ -23,6 +23,11 @@ class ScheduleSchema(ma.Schema):
             raise ma.ValidationError("Invalid cron syntax for schedule field.")
 
 
+    @ma.validates('schedule')
+    def validate_schedule(self, value):
+        if not croniter.is_valid(value):
+            raise ma.ValidationError("Invalid cron syntax for schedule field.")
+
     @ma.post_load
     def build_schedule(self, data, **kwargs):
         return None if kwargs.get('partial') is True else Schedule(**data)
