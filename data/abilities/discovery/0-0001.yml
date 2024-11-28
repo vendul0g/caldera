@@ -15,14 +15,4 @@
     - module: plugins.stockpile.app.parsers.ipaddr
       parserconfigs:
       - source: remote.host.ip
-  requirements: []
-  privilege: null
-  repeatable: false
-  buckets:
-  - discovery
-  additional_info: {}
-  access: {}
-  singleton: false
-  plugin: ''
-  delete_payload: true
-  id: 152679384-0000-0002
+  id: 0-0001

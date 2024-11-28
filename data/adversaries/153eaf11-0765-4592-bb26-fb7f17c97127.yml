@@ -1,0 +1,9 @@
+'adversary_id   ': "Da igual lo que pongas aqu\xED, se asigna uno por defecto: cb695913-1140-4c5b-8ff8-c5b5eddd380a"
+name: Hidden Host Finder
+description: This adversary will attempt to find hidden hosts on the network of the
+  agent.
+atomic_ordering:
+- 0-0000
+- 0-0001
+- 0-0002
+adversary_id: 153eaf11-0765-4592-bb26-fb7f17c97127

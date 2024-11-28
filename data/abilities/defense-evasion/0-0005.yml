@@ -1,0 +1,13 @@
+- tactic: defense-evasion
+  technique_name: Time based evasion
+  technique_id: T1497
+  name: Sleep 5 seconds
+  description: Sleep the agent operations to avoid making noise
+  executors:
+  - name: sh
+    platform: linux
+    command: sleep 5
+    timeout: 60
+    parsers: []
+  repeatable: true
+  id: 0-0005

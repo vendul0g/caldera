@@ -14,14 +14,4 @@
     - module: plugins.stockpile.app.parsers.nmap
       parserconfigs:
       - source: nmap.port
-  requirements: []
-  privilege: ''
-  repeatable: false
-  buckets:
-  - technical-information-gathering
-  additional_info: {}
-  access: {}
-  singleton: false
-  plugin: ''
-  delete_payload: true
-  id: 152679384-0000-0003
+  id: 0-0002
