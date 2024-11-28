@@ -13,7 +13,7 @@ touch /tmp/testfile && echo "Permisos de escritura en /tmp: Correctos" || { echo
 df -h /tmp
 
 # Wait for caldera to start
-sleep 30
+sleep 60
 
 # Execute the agent
 server="http://caldera:8888"
