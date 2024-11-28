@@ -1,15 +1,15 @@
 {
-    "ability_id": "0-0003",
+    "ability_id": "0-0004",
     "tactic": "reconaince",
     "technique_name": "Information Gathering",
     "technique_id": "T8005",
-    "name": "Whoami?",
-    "description": "To discover whoami",
+    "name": "Pwd",
+    "description": "To discover where am I",
     "executors": [
         {
             "name": "sh",
             "platform": "linux",
-            "command": "whoami",
+            "command": "pwd",
             "timeout": 60,
             "parsers": []
         }

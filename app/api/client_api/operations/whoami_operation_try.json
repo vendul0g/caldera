@@ -1,6 +1,6 @@
 {
-    "id": "152679384-0003-0000",
-    "name": "sleeper_whoami",
+    "id": "1-0001",
+    "name": "1_sleeper_whoami",
     "autonomous": 1,
     "use_learning_parsers": true,
     "auto_close": false,
@@ -12,7 +12,7 @@
         "id": "ed32b9c3-9593-4c33-b0db-e2007315096b"
     },
     "planner": {
-        "id": "aaa7c857-37a0-4c4a-85f7-4e9f7f30e31a"
+        "id": "fffd9cc8-8f66-48a7-8431-f55c5977719b"
     },
     "adversary": {
         "adversary_id": "62dd583a-d06c-488d-bbda-68be867ce88c"

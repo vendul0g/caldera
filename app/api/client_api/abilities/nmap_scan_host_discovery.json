@@ -1,5 +1,5 @@
 {
-    "ability_id": "152679384-0000-0002",
+    "ability_id": "0-0001",
     "tactic": "discovery",
     "technique_name": "Subnet Nmap Scan Host Discovery",
     "technique_id": "T1254",

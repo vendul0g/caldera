@@ -1,5 +1,5 @@
 {
-    "ability_id": "152679384-0000-0003",
+    "ability_id": "0-0002",
     "tactic": "technical-information-gathering",
     "technique_name": "Nmap port scanning",
     "technique_id": "T1254",

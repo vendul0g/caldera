@@ -1,13 +1,13 @@
 {
     "adversary_id": "62dd583a-d06c-488d-bbda-68be867ce88c",
     "name": "1 Sleeper whoami",
-    "description": "Adversary will try to discover whoami",
+    "description": "Adversary will try to find out who am i and where am i",
     "atomic_ordering": [
-      "152679384-0000-0004",
-      "152679384-0000-0000",
-      "152679384-0000-0001",
-      "152679384-0000-0000",
-      "152679384-0000-0002"
+      "0-0003",
+      "0-0005",
+      "0-0004",
+      "0-0005",
+      "0-0000"
     ],
     "objective": "495a9828-cab1-44dd-a0ca-66e58177d8cc",
     "tags": [],

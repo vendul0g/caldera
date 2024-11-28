@@ -1,5 +1,5 @@
 {
-    "ability_id": "152679384-0000-0001",
+    "ability_id": "0-0000",
     "tactic": "discovery",
     "technique_name": "System Network Configuration Discovery in Linux (ifconfig)",
     "technique_id": "T1016",

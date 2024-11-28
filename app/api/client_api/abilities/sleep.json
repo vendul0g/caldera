@@ -1,5 +1,5 @@
 {
-    "ability_id": "152679384-0000-0000",
+    "ability_id": "0-0005",
     "tactic": "defense-evasion",
     "technique_name": "Time based evasion",
     "technique_id": "T1497",
@@ -14,5 +14,5 @@
             "parsers": []
         }
     ],
-    "repeatable": false
+    "repeatable": true
 }
