@@ -685,6 +685,21 @@ def get_planners(client: APIClient, args: argparse.Namespace) -> None:
         logger.error(f"Failed to get planners: {e}")
 
 
+def get_planner(client: APIClient, args: argparse.Namespace) -> None:
+    """
+    Retrieve a single planner by its ID.
+
+    Args:
+        client (APIClient): The API client instance.
+        args (argparse.Namespace): The parsed command-line arguments.
+    """
+    try:
+        planner = client.get(f"planners/{args.planner_id}")
+        logger.info(f"Planner '{args.planner_id}':")
+        print(json.dumps(planner, indent=2))
+    except Exception as e:
+        logger.error(f"Failed to get planner: {e}")
+
 """================================================================="""
 """============                 Main                 ==============="""
 """================================================================="""
@@ -961,6 +976,13 @@ def main():
         "get_planners", help="Get the planners of Caldera"
     )
     parser_get_planners.set_defaults(func=get_planners)
+    
+    # Get single planner
+    parser_planner = subparsers.add_parser(
+        "get_planner", help="Retrieve a single planner by its ID"
+    )
+    parser_planner.add_argument("planner_id", help="ID of the planner to retrieve")
+    parser_planner.set_defaults(func=get_planner)
 
     ########################### END OF ARGS ###########################
     args = parser.parse_args()
