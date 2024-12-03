@@ -1,6 +1,6 @@
 {
-    "id": "1-0000",
-    "name": "prueba_hidden_host_finder",
+    "id": "1-0003",
+    "name": "prueba_sleeper_whoami",
     "autonomous": 1,
     "use_learning_parsers": true,
     "auto_close": false,
@@ -12,10 +12,10 @@
         "id": "ed32b9c3-9593-4c33-b0db-e2007315096b"
     },
     "planner": {
-        "id": "2-0003"
+        "id": "2-0000"
     },
     "adversary": {
-        "adversary_id": "153eaf11-0765-4592-bb26-fb7f17c97127"
+        "adversary_id": "62dd583a-d06c-488d-bbda-68be867ce88c"
     },
     "group": "red",
     "allow_repeatable_abilities": true
