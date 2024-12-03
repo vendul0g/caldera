@@ -1,0 +1,11 @@
+'adversary_id   ': "Da igual lo que pongas aqu\xED, se asigna uno por defecto: 153eaf11-0765-4592-bb26-fb7f17c97127"
+name: Time evasion based Hidden Host Finder
+description: This adversary will attempt to find hidden hosts on the network of the
+  agent, but usgin time evasion to avoid get detected.
+atomic_ordering:
+- 0-0000
+- 0-0005
+- 0-0001
+- 0-0005
+- 0-0002
+adversary_id: 024ea93b-8027-4f8a-a8df-358cb9dd33ad

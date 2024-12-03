@@ -1,0 +1,15 @@
+{
+    "adversary_id": "b0da412c-5e68-4c19-96ea-01c42b48a906",
+    "name": "Time evasion based Hidden Host Finder",
+    "description": "This adversary will attempt to find hidden hosts on the network of the agent, but usgin time evasion to avoid get detected.",
+    "atomic_ordering": [
+        "0-0000",
+        "0-0005",
+        "0-0001",
+        "0-0005",
+        "0-0002"
+    ],
+    "objective": "495a9828-cab1-44dd-a0ca-66e58177d8cc",
+    "tags": [],
+    "plugin": ""
+}
