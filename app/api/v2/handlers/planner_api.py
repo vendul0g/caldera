@@ -115,7 +115,7 @@ class PlannerApi(BaseObjectApi):
     @aiohttp_apispec.response_schema(None, description="Planner deleted successfully.")
     async def delete_planner(self, request: web.Request):
         try:
-            # Get the planner_id from request
+            # Get the planner_id from the request
             planner_id = request.match_info.get(self.id_property)
             logging.debug(f"Received planner ID: {planner_id}")
 
@@ -123,14 +123,10 @@ class PlannerApi(BaseObjectApi):
                 logging.error("Planner ID not provided in the request.")
                 raise web.HTTPBadRequest(reason="Planner ID is required.")
 
-            # Search planner in ram['planners']
+            # Search for the planner in ram['planners']
             logging.debug("Searching for the planner in ram['planners']")
             planner = next(
-                (
-                    p
-                    for p in self._data_svc.ram["planners"]
-                    if p.planner_id == planner_id
-                ),
+                (p for p in self._data_svc.ram["planners"] if p.planner_id == planner_id),
                 None,
             )
             if not planner:
@@ -138,82 +134,60 @@ class PlannerApi(BaseObjectApi):
                 raise web.HTTPNotFound(reason=f"Planner with ID {planner_id} not found")
             logging.debug(f"Found planner: {planner.name}")
 
-            # Delete planner from ram['planners']
-            logging.debug(f"Removing planner {planner.name} from ram['planners']")
-            self._data_svc.ram["planners"].remove(planner)
-
-            # Delete planner YAML file from disk
+            # Define file name
             file_name = f"{planner_id}.yml"
             logging.debug(f"Looking for planner YAML file: {file_name}")
 
-            # Use file_svc to find out the YAML file path
-            _, file_path = await self._file_svc.find_file_path(file_name, "planners")
-            logging.debug(f"Resolved file path: {file_path}")
+            # Use file_svc to find the YAML file path
+            _, file_path = await self._file_svc.find_file_path(file_name, "plugins")
+            logging.debug(f"Resolved file path from file_svc: {file_path}")
 
-            if file_path and os.path.exists(file_path):
-                logging.debug(f"File found. Deleting file: {file_path}")
-            elif not file_path:
-                # Fallback to default data/planners directory
-                fallback_dir = os.path.join(
-                    os.path.dirname(os.path.abspath(__file__)), "../../../../data/planners"
-                )
+            if not file_path or not os.path.exists(file_path):
+                # Fallback to default directory data/planners
+                fallback_dir = os.path.abspath(os.path.join(__file__, '..', '..', '..', '..', 'data', 'planners'))
                 file_path = os.path.join(fallback_dir, file_name)
                 logging.debug(f"Fallback file path: {file_path}")
-                if os.path.exists(file_path):
-                    logging.debug(f"File found in fallback directory. Deleting file: {file_path}")
-                else:
-                    logging.debug(f"File not found in fallback directory: {file_path}")
-                    file_path = None
+                if not os.path.exists(file_path):
+                    logging.debug(f"Planner YAML file not found for planner {planner_id}")
+                    raise web.HTTPNotFound(reason=f"Planner YAML file not found for planner {planner_id}")
 
-            if file_path and os.path.exists(file_path):
-                # Read the planner YAML file to get the module name
-                with open(file_path, "r") as yaml_file:
-                    planner_data = yaml.safe_load(yaml_file)
-                module_name = planner_data.get("module")
-                if module_name:
-                    # Define possible base directories
-                    base_dirs = [
-                        os.path.join(
-                            os.path.dirname(os.path.abspath(__file__)), "../../../../"
-                        ),
-                        os.path.join(
-                            os.path.dirname(os.path.abspath(__file__)),
-                            "../../../../plugins/stockpile/app",
-                        ),
-                        os.path.join(
-                            os.path.dirname(os.path.abspath(__file__)),
-                            "../../../../plugins/stockpile/app/planners",
-                        ),
-                        os.path.join(
-                            os.path.dirname(os.path.abspath(__file__)),
-                            "../../../../app/planners",
-                        ),
-                    ]
-                    module_path = module_name.replace(".", os.sep) + ".py"
-                    module_file_path = None
-                    for base_dir in base_dirs:
-                        potential_path = os.path.join(base_dir, module_path)
-                        logging.debug(f"Checking for module file at: {potential_path}")
-                        if os.path.exists(potential_path):
-                            module_file_path = potential_path
-                            break
-                    if module_file_path:
-                        logging.debug(f"Deleting module file: {module_file_path}")
-                        os.remove(module_file_path)
-                    else:
-                        logging.debug(
-                            f"Module file for {module_name} not found in specified directories."
-                        )
-                else:
-                    logging.debug(
-                        f"No module specified in planner YAML for planner {planner_id}"
-                    )
-                # Delete the planner YAML file
-                os.remove(file_path)
-            else:
-                logging.debug(
-                    f"File not found for planner {planner_id} at: {file_path}"
-                )
+            # Read the planner's YAML file to obtain the module name
+            with open(file_path, "r") as yaml_file:
+                planner_data = yaml.safe_load(yaml_file)
+            module_name = planner_data.get("module")
+            if not module_name:
+                logging.debug(f"No module specified in planner YAML for planner {planner_id}")
+                raise web.HTTPBadRequest(reason=f"No module specified in planner YAML for planner {planner_id}")
+
+            logging.debug(f"Module specified in planner YAML: {module_name}")
+
+            # Search for the Python module file
+            module_file_path = None
+            module_path = module_name.replace(".", os.sep) + ".py"
+            logging.debug(f"Module path: {module_path}")
+
+            # Base directory to search for the module file
+            base_dir = os.path.abspath(os.path.join(__file__, '..', '..', '..', '..', '..'))
+            potential_path = os.path.join(base_dir, module_path)
+            logging.debug(f"Checking for module file at: {potential_path}")
+            if os.path.exists(potential_path):
+                module_file_path = potential_path
+
+            if not module_file_path:
+                logging.debug(f"Module file for {module_name} not found in specified directories.")
+                raise web.HTTPNotFound(reason=f"Module file for {module_name} not found")
+
+            # Delete the module file
+            logging.debug(f"Deleting module file: {module_file_path}")
+            os.remove(module_file_path)
+
+            # Delete the planner YAML file
+            logging.debug(f"Deleting planner YAML file: {file_path}")
+            os.remove(file_path)
+
+            # Remove the planner from ram['planners']
+            logging.debug(f"Removing planner {planner.name} from ram['planners']")
+            self._data_svc.ram["planners"].remove(planner)
 
             # Save the updated state
             logging.debug("Saving the updated state")
@@ -226,11 +200,13 @@ class PlannerApi(BaseObjectApi):
                     "message": f"Planner {planner.name} deleted successfully",
                 }
             )
+
         except web.HTTPException as http_exc:
-            # Re-raise any HTTP exceptions
+            # Re-raise specific HTTP exceptions
+            logging.error(f"HTTP Exception encountered: {http_exc.reason}")
             raise http_exc
         except Exception as e:
-            # Register any other exception and raise an internal server error
+            # Log any other exception and raise an internal server error
             logging.error(f"Error deleting planner: {e}", exc_info=True)
             raise web.HTTPInternalServerError(
                 reason="An error occurred while deleting the planner."
