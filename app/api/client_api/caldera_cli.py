@@ -699,6 +699,21 @@ def get_planner(client: APIClient, args: argparse.Namespace) -> None:
         print(json.dumps(planner, indent=2))
     except Exception as e:
         logger.error(f"Failed to get planner: {e}")
+        
+        
+def delete_planner(client: APIClient, args: argparse.Namespace) -> None:
+    """
+    Delete a planner by its ID.
+
+    Args:
+        client (APIClient): The API client instance.
+        args (argparse.Namespace): The parsed command-line arguments.
+    """
+    try:
+        client.delete(f"planners/{args.planner_id}")
+        logger.info(f"Planner '{args.planner_id}' deleted successfully.")
+    except Exception as e:
+        logger.error(f"Failed to delete planner: {e}")
 
 """================================================================="""
 """============                 Main                 ==============="""
@@ -983,6 +998,13 @@ def main():
     )
     parser_planner.add_argument("planner_id", help="ID of the planner to retrieve")
     parser_planner.set_defaults(func=get_planner)
+    
+    # Delete Planner
+    parser_delete_planner = subparsers.add_parser(
+        "delete_planner", help="Delete a planner by its ID"
+    )
+    parser_delete_planner.add_argument("planner_id", help="ID of the planner to delete")
+    parser_delete_planner.set_defaults(func=delete_planner)
 
     ########################### END OF ARGS ###########################
     args = parser.parse_args()
