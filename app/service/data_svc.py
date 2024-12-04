@@ -420,8 +420,8 @@ class DataService(DataServiceInterface, BaseService):
         return await self.store(ability)
 
     async def _prune_non_critical_data(self):
-        self.ram.pop('plugins')
-        self.ram.pop('obfuscators')
+        self.ram.pop('plugins', None)
+        self.ram.pop('obfuscators', None)
 
     async def _apply_special_extension_hooks(self, special_extensions):
         for k, v in special_extensions.items():
