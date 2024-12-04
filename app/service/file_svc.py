@@ -101,15 +101,30 @@ class FileSvc(FileServiceInterface, BaseService):
             self.log.debug('Exception uploading file: %s' % e)
 
     async def find_file_path(self, name, location=''):
-        for plugin in await self.data_svc.locate('plugins', match=dict(enabled=True)):
-            for subd in ['', 'data']:
-                file_path = await self.walk_file_path(os.path.join('plugins', plugin.name, subd, location), name)
-                if file_path:
-                    return plugin.name, file_path
+        try:
+            # Locate enabled plugins
+            plugins = await self.data_svc.locate('plugins', match=dict(enabled=True))
+        except Exception as e:
+            self.log.error(f"Error locating plugins: {e}")
+            plugins = []
+
+        # Search within plugins
+        if plugins:
+            for plugin in plugins:
+                for subd in ['', 'data']:
+                    file_path = await self.walk_file_path(os.path.join('plugins', plugin.name, subd, location), name)
+                    if file_path:
+                        return plugin.name, file_path
+
+        # Fallback to search in 'data' directory
         file_path = await self.walk_file_path(os.path.join('data', location), name)
         if file_path:
             return None, file_path
-        return None, await self.walk_file_path('%s' % location, name)
+
+        # Fallback to search directly in the location
+        file_path = await self.walk_file_path(location, name)
+        return None, file_path
+
 
     async def read_file(self, name, location='payloads'):
         _, file_name = await self.find_file_path(name, location=location)
