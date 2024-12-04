@@ -1,0 +1,11 @@
+---
+
+id: 2-0006
+name: Cobratomic
+description: |
+  Cobratomic Planner. Execute abilities as the atomic planner, but can execute repeatable 
+  abilities more than one time ==> Better than atomic planner...
+module: app.planners.cobratomic
+params: {}
+ignore_enforcement_modules: []
+allow_repeatable_abilities: True
