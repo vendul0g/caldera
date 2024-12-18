@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   caldera:
     build:
@@ -35,20 +33,20 @@ services:
     depends_on:
       - caldera
 
-  agent-2:
-    build:
-      context: ./ubuntu-agent
-      dockerfile: Dockerfile
-    container_name: agent-2
-    networks:
-      - caldera-network
-    depends_on:
-      - caldera
+  # agent-2:
+  #   build:
+  #     context: ./ubuntu-agent
+  #     dockerfile: Dockerfile
+  #   container_name: agent-2
+  #   networks:
+  #     - caldera-network
+  #   depends_on:
+  #     - caldera
 
 
   discover-1:
     build:
-      context: ./ubuntu-agent
+      context: ./ubuntu-discover
       dockerfile: Dockerfile
     container_name: discover-1
     networks:
