@@ -73,22 +73,41 @@ class TcpSessionHandler(BaseWorld):
         except Exception as e:
             self.log.debug('Handshake failed: %s' % e)
             return
-        connection = writer.get_extra_info('socket')
+        ### Changed this to avoid exception --> 'TrnasportSocket' object has no attribute 'send'
+        # connection = writer.get_extra_info('socket')
+        # profile['executors'] = [e for e in profile['executors'].split(',') if e]
+        # profile['contact'] = 'tcp'
+        # agent, _ = await self.services.get('contact_svc').handle_heartbeat(**profile)
+        # new_session = Session(id=self.generate_number(size=6), paw=agent.paw, connection=connection)
         profile['executors'] = [e for e in profile['executors'].split(',') if e]
         profile['contact'] = 'tcp'
         agent, _ = await self.services.get('contact_svc').handle_heartbeat(**profile)
-        new_session = Session(id=self.generate_number(size=6), paw=agent.paw, connection=connection)
+        new_session = Session(id=self.generate_number(size=6), paw=agent.paw, writer=writer)
+        self.sessions.append(new_session)
+        await self.send(new_session.id, agent.paw, timeout=5)
+        
+        ### This remains the same ###
         self.sessions.append(new_session)
         await self.send(new_session.id, agent.paw, timeout=5)
 
     async def send(self, session_id: int, cmd: str, timeout: int = 60) -> Tuple[int, str, str, str]:
         try:
-            conn = next(i.connection for i in self.sessions if i.id == int(session_id))
-            conn.send(str.encode(' '))
-            time.sleep(0.01)
-            conn.send(str.encode('%s\n' % cmd))
-            response = await self._attempt_connection(session_id, conn, timeout=timeout)
+            ### Changed this to avoid exception --> 'TrnasportSocket' object has no attribute 'send'
+            # conn = next(i.connection for i in self.sessions if i.id == int(session_id))
+            # conn.send(str.encode(' '))
+            # time.sleep(0.01)
+            # conn.send(str.encode('%s\n' % cmd))
+            # response = await self._attempt_connection(session_id, conn, timeout=timeout)
+            # response = json.loads(response)
+            writer = next(i.writer for i in self.sessions if i.id == int(session_id))
+            writer.write(str.encode(' '))
+            await writer.drain()
+            await asyncio.sleep(0.01)  # Use asyncio.sleep instead of time.sleep
+            writer.write(str.encode(f'{cmd}\n'))
+            await writer.drain()
+            response = await self._attempt_connection(session_id, writer, timeout=timeout)
             response = json.loads(response)
+            ### This remains the same ###
             return response['status'], response['pwd'], response['response'], response.get('agent_reported_time', '')
         except Exception as e:
             self.log.exception(e)
@@ -99,22 +118,33 @@ class TcpSessionHandler(BaseWorld):
         profile_bites = (await reader.readline()).strip()
         return json.loads(profile_bites)
 
-    async def _attempt_connection(self, session_id, connection, timeout):
-        buffer = 4096
-        data = b''
-        waited_seconds = 0
-        time.sleep(0.1)  # initial wait for fast operations.
-        while True:
-            try:
-                part = connection.recv(buffer)
-                data += part
-                if len(part) < buffer:
-                    break
-            except BlockingIOError as err:
-                if waited_seconds < timeout:
-                    time.sleep(1)
-                    waited_seconds += 1
-                else:
-                    self.log.error("Timeout reached for session %s", session_id)
-                    return json.dumps(dict(status=1, pwd='~$ ', response=str(err)))
-        return str(data, 'utf-8')
+    async def _attempt_connection(self, session_id, writer, timeout):
+        ### Changed this to avoid exception --> 'TrnasportSocket' object has no attribute 'send'
+        # buffer = 4096
+        # data = b''
+        # waited_seconds = 0
+        # time.sleep(0.1)  # initial wait for fast operations.
+        # while True:
+        #     try:
+        #         part = connection.recv(buffer)
+        #         data += part
+        #         if len(part) < buffer:
+        #             break
+        #     except BlockingIOError as err:
+        #         if waited_seconds < timeout:
+        #             time.sleep(1)
+        #             waited_seconds += 1
+        #         else:
+        #             self.log.error("Timeout reached for session %s", session_id)
+        #             return json.dumps(dict(status=1, pwd='~$ ', response=str(err)))
+        # return str(data, 'utf-8')
+        reader = ...  # Retrieve the corresponding StreamReader for the session
+        try:
+            data = await asyncio.wait_for(reader.read(4096), timeout=timeout)
+            return data.decode('utf-8')
+        except asyncio.TimeoutError:
+            self.log.error("Timeout reached for session %s", session_id)
+            return json.dumps(dict(status=1, pwd='~$ ', response="Timeout"))
+        except Exception as e:
+            self.log.error("Error during connection attempt: %s", e)
+            return json.dumps(dict(status=1, pwd='~$ ', response=str(e)))
